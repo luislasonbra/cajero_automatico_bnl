@@ -24,4 +24,10 @@
 3. Administrado (Actualmente no disponible)     # Esta pantalla esta en proceso
 ```
 
+## Imagenes de Muestra
+![Pantalla de Bienvenida](preview/preview_1.png)
+![Pantalla de Login](preview/preview_2.png)
+![Pantalla de Bienvenida](preview/preview_3.png)
+![Pantalla de Ver reportes](preview/preview_4.png)
+
 ## Proyecto en proceso...
