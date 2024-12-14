@@ -293,7 +293,7 @@
 				<p class="sub-title">Por favor, inserte su tarjeta</p>
 				<div class="buttons">
 					<button type="button" class="btn btn-primary" onclick="show_login();"><i class="bi bi-credit-card-fill"></i><br> Insertar tarjeta</button>
-					<button type="button" class="btn btn-success" onclick="alert('No disponible.');"><i class="bi bi-person-fill"></i><br> Administrador</button>
+					<button type="button" class="btn btn-success" onclick="showAlertModal('Alerta', 'No disponible.');"><i class="bi bi-person-fill"></i><br> Administrador</button>
 				</div>
 			</div>
 			

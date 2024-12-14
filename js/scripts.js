@@ -482,7 +482,13 @@ function realizar_transferencia() {
 						$.ajax({
 							url: 'index.php',
 							type: 'POST',
-							data: { action: 'create_transaction', id_usuario: transactionUser.id_usuario, nombre: 'Depósito', descripcion: 'Depósito de dinero', monto: monto },
+							data: {
+								action: 'create_transaction',
+								id_usuario: transactionUser.id_usuario,
+								nombre: 'Transferencia',
+								descripcion: `Has recibido $${formatWithCommas(monto)} de la cuenta ${LOGIN_USUARIO.nombre}.`,
+								monto: monto
+							},
 							dataType: 'json',
 							success: (response2) => {
 								if (response2.status == 'success') {
@@ -491,7 +497,13 @@ function realizar_transferencia() {
 									$.ajax({
 										url: 'index.php',
 										type: 'POST',
-										data: { action: 'create_transaction', id_usuario: LOGIN_USUARIO.id_usuario, nombre: 'Retiro', descripcion: 'Retiro de dinero', monto: -monto },
+										data: {
+											action: 'create_transaction',
+											id_usuario: LOGIN_USUARIO.id_usuario,
+											nombre: 'Transaccion',
+											descripcion: `Has transferido $${formatWithCommas(monto)} a la cuenta ${tarjetaNumero}.`,
+											monto: -monto
+										},
 										dataType: 'json',
 										success: (response3) => {
 											if (response3.status == 'success') {
