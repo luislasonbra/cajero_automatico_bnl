@@ -299,6 +299,13 @@ function loadReportes() {
 					// Si hay reportes, agregarlos a la tabla
 					for (let i = 0; i < response.length; i++) {
 						const element = response[i];
+						// Clear
+						if (element.id_transaccion == null) {
+							// Si no hay reportes, mostrar un mensaje
+							$('.reportes-table tbody').append('<tr><td colspan="7" align="center">No hay reportes Registrados</td></tr>');
+							return;
+						}
+						
 						// const encodedJson = '\'' + encodeURIComponent(JSON.stringify(element)) + '\'';
 						$('.reportes-table tbody').append(
 							'<tr><th scope="row">' + element.id_transaccion + '</th>' +
