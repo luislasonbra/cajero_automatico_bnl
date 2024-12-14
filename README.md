@@ -21,14 +21,14 @@
     2.4 Transferencia                           # Esta pantalla funciona por completo
     2.5 Consulta de saldo                       # Esta pantalla funciona por completo
     2.6 Ver reportes                            # Esta pantalla funciona por completo
-3. Administrado (Actualmente no disponible)     # Esta pantalla esta en proceso
+3. Administrador (Actualmente no disponible)     # Esta pantalla esta en proceso
 ```
 
 #### Mejoras
 ```shell
 1. Se agrego control de tokens (para la seguridad)
 2. Ventanas modales para los errores y mensajes de alerta.
-3. Administrado (pendiente...)
+3. Administrador (pendiente...)
 ```
 
 
