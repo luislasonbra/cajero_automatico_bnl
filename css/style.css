@@ -66,3 +66,8 @@ body {
 	font-size: 25px;
 	font-weight: bold;
 }
+
+.table-scroll {
+	max-height: 300px;
+	overflow-y: auto;
+}

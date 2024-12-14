@@ -49,8 +49,10 @@ CREATE TRIGGER after_insert_transaccion
 	END$$
 DELIMITER ;
 
--- Crear un usuario administrador
+-- Crear un usuario
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `contrasena`) VALUES (NULL, '123456789', '1234');
+-- Crear un segundo usuario
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `contrasena`) VALUES (NULL, '987654321', '4321');
 
 
 -- ================================

@@ -45,6 +45,10 @@ const MENU_OPCIONES = [
 			<label for="monto" class="form-label">Monto:</label>
 			<input type="number" class="form-control" id="monto" required value="0">
 		</div>
+		<div class="mb-3">
+			<label for="cuentaDestino" class="form-label">Número de cuenta del destinatario:</label>
+			<input type="text" class="form-control" id="cuentaDestino" required>
+		</div>
 	</div>
 	<div class="buttons btn-group-vertical w-100">
 		<button type="button" class="mb-2 btn btn-danger" onclick="show_transacction(0);"><i class="bi bi-x"></i><br> Cancelar</button>
@@ -67,7 +71,7 @@ const MENU_OPCIONES = [
 	// Reporte 'table-dark'
 	`<p class="title">Reportes</p>
 	<div class="body btn-group-vertical w-100" role="group" aria-label="Basic example">
-		<div class="table-responsive w-100">
+		<div class="table-responsive w-100 table-scroll">
 			<!-- table table-sm table-bordered table-hover table-striped -->
 			<table class="table table-bordered table-hover table-striped reportes-table">
 				<thead>
@@ -96,8 +100,142 @@ const MENU_OPCIONES = [
 // No se debe de manejar desde el forn-end
 var LOGIN_USUARIO = null;
 
+
+// =============================
+// Informacion del Token
+// =============================
+let token = null;
+let tokenExpiration = null; // Para almacenar la fecha de expiración del token
+
+// Convert seconds to milliseconds
+const seconds2Milliseconds = (seconds) => seconds * 1000;
+
+// Convert minutes to milliseconds
+const minutes2Milliseconds = (minutes) => minutes * 60 * 1000;
+
+// Convert milliseconds to minutes
+const milliseconds2Minutes = (milliseconds) => milliseconds / (60 * 1000);
+
+// Generar un token
+function generateToken() {
+	token = Math.random().toString(36).substring(2); // Token aleatorio
+	tokenExpiration = Date.now() + minutes2Milliseconds(1); // Expira en 1 minutos
+}
+
+// Validar token
+const isTokenValid = () => token && Date.now() < tokenExpiration;
+
+
+// ===================================================
+// Se Ejecuta al Terminar la carga del HTML
+// ===================================================
 $(document).ready(() => {
+	// Carga el controlador del Login
+	loginControlEvent();
+});
+
+// Initialize el control de tokens
+function initializeToken() {
+	// Generar un nuevo token al iniciar sesión
+	generateToken();
+	// Verifica si el token esta activo
+	const checkExpireTokenInterval = setInterval(() => {
+		console.log("checkExpireTokenInterval: " + !isTokenValid());
+		// Comprueba el token
+		if (!isTokenValid()) {
+			// Elimina el intervalo
+			clearInterval(checkExpireTokenInterval);
+			// Muestra un mensaje de alerta
+			showAlertModal("El token ha expirado", "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.", () => insertLogin());
+			return;
+		}
+	}, seconds2Milliseconds(10));
+}
+
+function formatWithCommas(value) {
+	const number = parseFloat(value); // Convertir a número
+	if (isNaN(number)) return "Invalid input";
+	return number.toLocaleString('en-US'); // Cambia 'en-US' por otra región si es necesario
+}
+
+function showAlertModal(title, message, callback) {
+	const modal = $('#dinamicModal');
+	const modalDialog = modal.find('.modal-dialog');
+	const modalContent = modalDialog.find('.modal-content');
+	const modalHeader = modalContent.find('.modal-header');
+	const modalBody = modalContent.find('.modal-body');
+	// const modalFooter = modalContent.find('.modal-footer');
+	
+	// Realiza el cambio del contenido
+	modalHeader.find('#dinamicModalLabel').text(title);
+	
+	//
+	modalBody.html(message);
+	
+	// Mostrar el modal
+	modal.modal('show');
+	
+	//
+	modal.off('hidden.bs.modal', callback);
+	modal.on('hidden.bs.modal', callback);
+	
+	//
+	return modal;
+}
+
+// Recargamos la pagina web
+function refreshPage() {
+	location.reload();
+}
+
+// Muestra un div y elimina la clase 'd-none'
+function show_and_remove_class(id) {
+	$(id).removeClass('d-none');
+	$(id).show();
+}
+
+// Oculta un div y agrega la clase 'd-none'
+function hide_and_add_class(id) {
+	$(id).addClass('d-none');
+	$(id).hide();
+}
+
+// Muestra el formulario de login
+function show_login() {
+	// Oculta el primer menu
+	hide_and_add_class('#opciones-wrapper');
+	// Muestra el menu de opciones
+	show_and_remove_class('#operations-wrapper');
+}
+
+// Inserta el formulario de login
+function insertLogin() {
+	const login = `<p class="title">Inicio de Sesión</p>
+	<div class="body">
+		<div class="mb-3">
+			<label for="tarjetaNumero" class="form-label">Número de tarjeta:</label>
+			<input type="text" class="form-control" id="tarjetaNumero" required value="123456789">
+		</div>
+		<div class="mb-3">
+			<label for="tarjetaPin" class="form-label">PIN:</label>
+			<input type="password" class="form-control" id="tarjetaPin" required value="1234">
+		</div>
+		<!-- Login -->
+		<button type="button" class="w-100 btn btn-primary btn-login"><i class="bi bi-arrow-up-right-circle-fill"></i><br> Iniciar Sesión</button>
+	</div>`;
+	
+	// Realiza los cambios dinamicamente
+	$('#operations-wrapper').html(login);
+	
+	// LLama la controlador de los eventos del login
+	loginControlEvent();
+}
+
+// Agrega el controlador de login
+function loginControlEvent() {
+	// ================================
 	// LOGIN
+	// ================================
 	const loginWrapper = $('#operations-wrapper');
 	const body = loginWrapper.find('.body');
 	// Buttons
@@ -117,45 +255,22 @@ $(document).ready(() => {
 					LOGIN_USUARIO = response.usuario;
 					show_transacction(0);
 					console.log(response.usuario);
+					// Initializa el control por token
+					initializeToken();
 				}
 				else {
 					// Si la respuesta contiene un mensaje de error, lo muestra en un alerta
-					alert(response.message);
+					showAlertModal("Alerta", response.message);
 				}
 			},
 			error: (xhr, status, error) => {
 				console.error('Error en la solicitud:', error);
 			}
 		});
-		
 	});
-});
-
-function formatWithCommas(value) {
-	const number = parseFloat(value); // Convertir a número
-	if (isNaN(number)) return "Invalid input";
-	return number.toLocaleString('en-US'); // Cambia 'en-US' por otra región si es necesario
 }
 
-// Muestra un div y elimina la clase 'd-none'
-function show_and_remove_class(id) {
-	$(id).removeClass('d-none');
-	$(id).show();
-}
-
-// Oculta un div y agrega la clase 'd-none'
-function hide_and_add_class(id) {
-	$(id).addClass('d-none');
-	$(id).hide();
-}
-
-function show_login() {
-	// Oculta el primer menu
-	hide_and_add_class('#opciones-wrapper');
-	// Muestra el menu de opciones
-	show_and_remove_class('#operations-wrapper');
-}
-
+// Muestra la opcion deseada
 function show_transacction(id) {
 	// Comprueba de que los id existan
 	if (id < 0 || id >= MENU_OPCIONES.length) return;
@@ -168,6 +283,7 @@ function show_transacction(id) {
 	else if (id == 5) loadReportes();
 }
 
+// Carga los Reportes
 function loadReportes() {
 	if (LOGIN_USUARIO) {
 		// Cargamos la data
@@ -206,17 +322,16 @@ function loadReportes() {
 		});
 	}
 	else {
-		alert("No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión");
 	}
 }
 
 // Retiro de efectivo
 function realizar_retiro() {
 	if (LOGIN_USUARIO == null) {
-		alert("No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión");
 		return;
 	}
-	// alert("Retiro de efectivo");
 	
 	// Realiza una solicitud AJAX para comprobar el saldo
 	$.ajax({
@@ -229,10 +344,10 @@ function realizar_retiro() {
 			const monto = parseInt($('#operations-wrapper .body .mb-3 #monto').val());
 			if (monto < 1 || monto > response.saldo) {
 				if (monto > response.saldo) {
-					alert("No tiene saldo suficiente en su cuenta.");
+					showAlertModal("Alerta", "No tiene saldo suficiente en su cuenta.");
 				}
 				else {
-					alert("El monto a retirar debe ser mayor a 0.");
+					showAlertModal("Alerta", "El monto a retirar debe ser mayor a 0.");
 				}
 				return;
 			}
@@ -255,11 +370,10 @@ function realizar_retiro() {
 				dataType: 'json',
 				success: (response) => {
 					if (response.status == 'success') {
-						alert('La transacción se realizó con éxito.');
-						show_transacction(0);
+						showAlertModal("Alerta", 'La transacción se realizó con éxito.', () => show_transacction(0));
 					}
 					else {
-						alert(response.message);
+						showAlertModal("Alerta", response.message);
 					}
 				},
 				error: (xhr, status, error) => {
@@ -273,16 +387,18 @@ function realizar_retiro() {
 	});
 }
 
+// Realiza la accion de deposito
 function realizar_deposito() {
 	if (LOGIN_USUARIO == null) {
-		alert("No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión");
+		refreshPage();
 		return;
 	}
 	
 	// Monto a depósitar
 	const monto = parseInt($('#operations-wrapper .body .mb-3 #monto').val());
 	if (monto <= 0) {
-		alert("El monto a depósitar debe ser mayor a 0.");
+		showAlertModal("Alerta", "El monto a depósitar debe ser mayor a 0.");
 		return;
 	}
 	
@@ -300,11 +416,10 @@ function realizar_deposito() {
 		dataType: 'json',
 		success: (response) => {
 			if (response.status == 'success') {
-				alert('El depósito se realizó con éxito.');
-				show_transacction(0);
+				showAlertModal("Alerta", 'El depósito se realizó con éxito.', () => show_transacction(0));
 			}
 			else {
-				alert(response.message);
+				showAlertModal("Alerta", response.message);
 			}
 		},
 		error: (xhr, status, error) => {
@@ -313,13 +428,115 @@ function realizar_deposito() {
 	});
 }
 
+// Realiza la accion de transferir dinero a otra cuenta
 function realizar_transferencia() {
-	alert("Transferencia");
+	if (LOGIN_USUARIO == null) {
+		showAlertModal("Alerta", "No ha iniciado sesión");
+		return;
+	}
+	
+	// Monto
+	const monto = parseInt($('#operations-wrapper .body .mb-3 #monto').val());
+	if (monto <= 0) {
+		showAlertModal("Alerta", "El monto a transferir debe ser mayor a 0.");
+		return;
+	}
+	// Comprobamos que la cuenta no sea la misma
+	const tarjetaNumero = $('#operations-wrapper .body .mb-3 #cuentaDestino').val();
+	if (LOGIN_USUARIO.nombre === tarjetaNumero) {
+		showAlertModal("Alerta", "No se puede realizar esta transacción a la misma cuenta");
+		return;
+	}
+	else if (tarjetaNumero == null || tarjetaNumero === "") {
+		showAlertModal("Alerta", "El número de cuenta no puede estar vacío.");
+		return;
+	}
+	
+	// Comprobamos si hay fondos suficientes
+	$.ajax({
+		url: 'index.php',
+		type: 'GET',
+		data: { action: 'get_cuenta_saldo', id_usuario: LOGIN_USUARIO.id_usuario },
+		dataType: 'json',
+		success: (response) => {
+			const saldo = response.saldo;
+			
+			// Si el saldo es menor que el monto no se puede realizar la transaccion
+			if (saldo < monto) {
+				showAlertModal("Alerta", "Fondos insuficientes.");
+				return;
+			}
+			
+			// Comprobamos que la cuenta de destino exista
+			$.ajax({
+				url: 'index.php',
+				type: 'POST',
+				data: { action: 'check_exist_user', tarjetaNumero: tarjetaNumero },
+				dataType: 'json',
+				success: (response) => {
+					console.log(response);
+					if (response.status == 'success') {
+						const transactionUser = response.usuario;
+						
+						// Realiza la operacion de deposito a la cuenta de destino
+						$.ajax({
+							url: 'index.php',
+							type: 'POST',
+							data: { action: 'create_transaction', id_usuario: transactionUser.id_usuario, nombre: 'Depósito', descripcion: 'Depósito de dinero', monto: monto },
+							dataType: 'json',
+							success: (response2) => {
+								if (response2.status == 'success') {
+									
+									// Retiramos el dinero de la cuenta actual
+									$.ajax({
+										url: 'index.php',
+										type: 'POST',
+										data: { action: 'create_transaction', id_usuario: LOGIN_USUARIO.id_usuario, nombre: 'Retiro', descripcion: 'Retiro de dinero', monto: -monto },
+										dataType: 'json',
+										success: (response3) => {
+											if (response3.status == 'success') {
+												showAlertModal("Alerta", "La transferencia se realizó con éxito.", () => show_transacction(0));
+											}
+											else {
+												showAlertModal("Alerta", response3.message);
+											}
+										},
+										error: (xhr, status, error) => {
+											console.error('Error al procesar el retiro:', error);
+										}
+									});
+									
+								}
+								else {
+									showAlertModal("Alerta", "Error al depositar el dinero: " + response2.message);
+								}
+							},
+							error: (xhr, status, error) => {
+								console.error('Error al procesar el depósito:', error);
+							}
+						});
+						
+					}
+					else {
+						showAlertModal("Alerta", "Esta cuenta no existe.");
+					}
+				},
+				error: (xhr, status, error) => {
+					console.error('Error al verificar la cuenta de destino:', error);
+				}
+			});
+			
+		},
+		error: (xhr, status, error) => {
+			console.error('Error al obtener el saldo:', error);
+		}
+	});
 }
 
+// Actualizar el monto actual de la cuenta
 function consultar_saldo() {
 	if (LOGIN_USUARIO == null) {
-		alert("No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión");
 		return;
 	}
 	

@@ -207,6 +207,61 @@
 		// Finaliza el script para que no se ejecute el codigo HTML
 		exit;
 	}
+	// Verifica si el usuario existe
+	else if (isset($_POST['action']) && $_POST['action'] == 'check_exist_user') {
+		// Sanitizar el nombre (eliminar caracteres especiales)
+		$tarjetaNumero = htmlspecialchars($_POST['tarjetaNumero'], ENT_QUOTES, 'UTF-8');
+		
+		// Usar una consulta preparada para evitar inyecciones SQL
+		$stmt = $conn->prepare("SELECT U.id_usuario, U.nombre, C.id_cuenta, C.monto FROM usuarios U JOIN cuentas C ON U.id_usuario = C.id_usuario WHERE U.nombre = ?");
+		$stmt->bind_param("s", $tarjetaNumero);  // 's' significa que los parámetros son cadenas de texto
+		
+		// Data Null
+		$data = null;
+		
+		// Ejecutar la consulta
+		if ($stmt->execute()) {
+			$result = $stmt->get_result(); // Obtener el resultado de la consulta
+			if ($result->num_rows > 0) {
+				$row = $result->fetch_assoc();
+				//
+				$data = array(
+					"status" => "success",
+					"message" => "Usuario válido",
+					"usuario" => [
+						"id_usuario" => $row["id_usuario"],
+						"nombre" => $row["nombre"]
+					],
+					"cuenta" => [
+						"id_cuenta" => $row["id_cuenta"],
+						"monto" => $row["monto"],
+					]
+				);
+			}
+			else {
+				$data = array(
+					"status" => "error",
+					"message" => "Usuario no encontrado"
+				);
+			}
+		}
+		else {
+			$data = array(
+				"status" => "error_db",
+				"message" => "Error al realizar la consulta: " . $stmt->error
+			);
+		}
+		
+		// Cerrar la declaración y la conexión
+		$stmt->close();
+		
+		// Establecer el encabezado de tipo de contenido como JSON
+		header('Content-Type: application/json');
+		// Devolver los datos en formato JSON
+		echo json_encode($data);
+		// Finaliza el script para que no se ejecute el codigo HTML
+		exit;
+	}
 	
 	// Cierra la conexion
 	$conn->close();
@@ -261,6 +316,25 @@
 			
 		</div>
 	</main>
+	
+	<!-- Ventana Modal -->
+	<div class="modal fade" id="dinamicModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="dinamicModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="dinamicModalLabel">Modal title</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body"></div>
+				
+				<!-- Centrar:  d-flex justify-content-center -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+					<!-- <button type="button" class="btn btn-primary">Understood</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<!-- Dependencias de bootstrap -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
