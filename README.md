@@ -18,11 +18,19 @@
     2.1 Pantalla de Login                       # Esta pantalla funciona por completo
     2.2 Retiro de efectivo                      # Esta pantalla funciona por completo
     2.3 Depósito                                # Esta pantalla funciona por completo
-    2.4 Transferencia (en proceso)              # Esta pantalla actualmente esta en desarrollo
+    2.4 Transferencia                           # Esta pantalla funciona por completo
     2.5 Consulta de saldo                       # Esta pantalla funciona por completo
     2.6 Ver reportes                            # Esta pantalla funciona por completo
 3. Administrado (Actualmente no disponible)     # Esta pantalla esta en proceso
 ```
+
+#### Mejoras
+```shell
+1. Se agrego control de tokens (para la seguridad)
+2. Ventanas modales para los errores y mensajes de alerta.
+3. Administrado (pendiente...)
+```
+
 
 ## Imagenes de Muestra
 ![Pantalla de Bienvenida](preview/preview_1.png)
