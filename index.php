@@ -303,11 +303,11 @@
 				<div class="body">
 					<div class="mb-3">
 						<label for="tarjetaNumero" class="form-label">Número de tarjeta:</label>
-						<input type="text" class="form-control" id="tarjetaNumero" required value="123456789">
+						<input type="text" class="form-control" id="tarjetaNumero" required placeholder="123456789">
 					</div>
 					<div class="mb-3">
 						<label for="tarjetaPin" class="form-label">PIN:</label>
-						<input type="password" class="form-control" id="tarjetaPin" required value="1234">
+						<input type="password" class="form-control" id="tarjetaPin" required placeholder="1234">
 					</div>
 					<!-- Login -->
 					<button type="button" class="w-100 btn btn-primary btn-login"><i class="bi bi-arrow-up-right-circle-fill"></i><br> Iniciar Sesión</button>
