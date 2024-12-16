@@ -30,6 +30,29 @@ CREATE TABLE IF NOT EXISTS Transacciones (
 	FOREIGN KEY (id_cuenta) REFERENCES Cuentas(id_cuenta)
 );
 
+-- Crear la tabla de Administradores
+CREATE TABLE IF NOT EXISTS Admins (
+	id_admin INT AUTO_INCREMENT PRIMARY KEY,
+	usuario VARCHAR(100),
+	contrasena VARCHAR(100)
+);
+
+-- Crear la tabla de Denominaciones de billetes
+CREATE TABLE IF NOT EXISTS Denominaciones (
+	id_denominacion INT AUTO_INCREMENT PRIMARY KEY,
+	valor INT UNIQUE NOT NULL,
+	cantidad INT NOT NULL
+);
+
+-- Crea la tabla de reportes de efectivo
+CREATE TABLE reportes_efectivo (
+	id_reporte INT AUTO_INCREMENT PRIMARY KEY,
+	fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	detalles JSON NOT NULL,
+	total DECIMAL(10, 2) NOT NULL
+);
+
+
 -- Crear el Trigger que se ejecuta luego de insertar un usuario
 DELIMITER $$
 CREATE TRIGGER after_insert_usuario
@@ -53,6 +76,9 @@ DELIMITER ;
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `contrasena`) VALUES (NULL, '123456789', '1234');
 -- Crear un segundo usuario
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `contrasena`) VALUES (NULL, '987654321', '1234');
+
+-- Crea un usuario administrador
+INSERT INTO `Admins` (`id_admin`, `usuario`, `contrasena`) VALUES (NULL, 'admin', '1234');
 
 
 -- ================================

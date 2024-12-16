@@ -1,17 +1,33 @@
 // Esto se puede proteger desde PHP
+const MENU_OPCIONS_INSERT = {
+	SELECTION_OPERATION: 0,
+	RETIRO_EFECTIVO: 1,
+	DEPOSITO: 2,
+	TRANSFERENCIA: 3,
+	CONSULTA_SALDO: 4,
+	REPORTES: 5,
+	INICIAR_SESION: 6
+};
 const MENU_OPCIONES = [
+	// =============================================
+	// 0
+	// =============================================
 	// Selección de Operación
 	`<p class="title">Selección de Operación</p>
 	<div class="body btn-group-vertical w-100" role="group" aria-label="Basic example">
-		<button type="button" class="mb-2 btn btn-primary"	onclick="show_transacction(1);"><i class="bi bi-currency-dollar"></i><br> Retiro de efectivo</button>
-		<button type="button" class="mb-2 btn btn-primary"	onclick="show_transacction(2);"><i class="bi bi-piggy-bank"></i><br> Depósito</button>
-		<button type="button" class="mb-2 btn btn-primary"	onclick="show_transacction(3);"><i class="bi bi-currency-exchange"></i><br> Transferencia</button>
-		<button type="button" class="btn btn-primary"		onclick="show_transacction(4);"><i class="bi bi-wallet2"></i><br> Consulta de saldo</button>
+		<button type="button" class="mb-2 btn btn-primary"	onclick="show_menu_option(MENU_OPCIONS_INSERT.RETIRO_EFECTIVO);"><i class="bi bi-currency-dollar"></i><br> Retiro de efectivo</button>
+		<button type="button" class="mb-2 btn btn-primary"	onclick="show_menu_option(MENU_OPCIONS_INSERT.DEPOSITO);"><i class="bi bi-piggy-bank"></i><br> Depósito</button>
+		<button type="button" class="mb-2 btn btn-primary"	onclick="show_menu_option(MENU_OPCIONS_INSERT.TRANSFERENCIA);"><i class="bi bi-currency-exchange"></i><br> Transferencia</button>
+		<button type="button" class="btn btn-primary"		onclick="show_menu_option(MENU_OPCIONS_INSERT.CONSULTA_SALDO);"><i class="bi bi-wallet2"></i><br> Consulta de saldo</button>
 		
 		<!-- Ver reporte -->
-		<button type="button" class="mt-3 btn btn-primary" onclick="show_transacction(5);"><i class="bi bi-eye"></i><br> Ver Reporte</button>
+		<button type="button" class="mt-2 btn btn-primary" onclick="show_menu_option(MENU_OPCIONS_INSERT.REPORTES);"><i class="bi bi-eye"></i><br> Ver Reporte</button>
+		<button type="button" class="mt-3 btn btn-danger" onclick="cerrar_sesion();"><i class="bi bi-box-arrow-in-left"></i><br> Cerrar Sesión</button>
 	</div>`,
 	
+	// =============================================
+	// 1
+	// =============================================
 	// Retiro de efectivo
 	`<p class="title">Retiro de efectivo</p>
 	<div class="body">
@@ -21,10 +37,13 @@ const MENU_OPCIONES = [
 		</div>
 	</div>
 	<div class="buttons btn-group-vertical w-100">
-		<button type="button" class="mb-2 btn btn-danger" onclick="show_transacction(0);"><i class="bi bi-x"></i><br> Cancelar</button>
+		<button type="button" class="mb-2 btn btn-danger" onclick="show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION);"><i class="bi bi-x"></i><br> Cancelar</button>
 		<button type="button" class="btn btn-primary" onclick="realizar_retiro();"><i class="bi bi-arrow-right-square-fill"></i><br> Realizar transacción</button>
 	</div>`,
 	
+	// =============================================
+	// 2
+	// =============================================
 	// Depósito
 	`<p class="title">Depósito</p>
 	<div class="body">
@@ -34,10 +53,13 @@ const MENU_OPCIONES = [
 		</div>
 	</div>
 	<div class="buttons btn-group-vertical w-100">
-		<button type="button" class="mb-2 btn btn-danger" onclick="show_transacction(0);"><i class="bi bi-x"></i><br> Cancelar</button>
+		<button type="button" class="mb-2 btn btn-danger" onclick="show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION);"><i class="bi bi-x"></i><br> Cancelar</button>
 		<button type="button" class="btn btn-primary" onclick="realizar_deposito();"><i class="bi bi-arrow-right-square-fill"></i><br> Realizar transacción</button>
 	</div>`,
 	
+	// =============================================
+	// 3
+	// =============================================
 	// Transferencia
 	`<p class="title">Transferencia</p>
 	<div class="body">
@@ -51,10 +73,13 @@ const MENU_OPCIONES = [
 		</div>
 	</div>
 	<div class="buttons btn-group-vertical w-100">
-		<button type="button" class="mb-2 btn btn-danger" onclick="show_transacction(0);"><i class="bi bi-x"></i><br> Cancelar</button>
+		<button type="button" class="mb-2 btn btn-danger" onclick="show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION);"><i class="bi bi-x"></i><br> Cancelar</button>
 		<button type="button" class="btn btn-primary" onclick="realizar_transferencia();"><i class="bi bi-arrow-right-square-fill"></i><br> Realizar transacción</button>
 	</div>`,
 	
+	// =============================================
+	// 4
+	// =============================================
 	// Consulta de saldo
 	`<p class="title">Consulta de saldo</p>
 	<div class="body">
@@ -64,10 +89,13 @@ const MENU_OPCIONES = [
 		</div>
 	</div>
 	<div class="buttons btn-group-vertical w-100">
-		<button type="button" class="mb-2 btn btn-danger" onclick="show_transacction(0);"><i class="bi bi-x"></i><br> Cancelar</button>
+		<button type="button" class="mb-2 btn btn-danger" onclick="show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION);"><i class="bi bi-x"></i><br> Cancelar</button>
 		<button type="button" class="btn btn-primary" onclick="consultar_saldo();"><i class="bi bi-arrow-clockwise"></i><br> Actualizar</button>
 	</div>`,
 	
+	// =============================================
+	// 5
+	// =============================================
 	// Reporte 'table-dark'
 	`<p class="title">Reportes</p>
 	<div class="body btn-group-vertical w-100" role="group" aria-label="Basic example">
@@ -91,14 +119,37 @@ const MENU_OPCIONES = [
 		</div>
 		<div class="btn-group-vertical w-100">
 			<button type="button" class="mb-2 btn btn-primary" onclick="loadReportes();"><i class="bi bi-arrow-clockwise"></i><br> Actualizar</button>
-			<button type="button" class="btn btn-danger" onclick="show_transacction(0);"><i class="bi bi-x"></i><br> Cancelar</button>
+			<button type="button" class="btn btn-danger" onclick="show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION);"><i class="bi bi-x"></i><br> Cancelar</button>
 		</div>
+	</div>`,
+	
+	// =============================================
+	// 6
+	// =============================================
+	// Login Section
+	`<p class="title">Inicio de Sesión</p>
+	<div class="body">
+		<div class="mb-3">
+			<label for="tarjetaNumero" class="form-label">Número de tarjeta:</label>
+			<input type="text" class="form-control" id="tarjetaNumero" required placeholder="123456789">
+		</div>
+		<div class="mb-3">
+			<label for="tarjetaPin" class="form-label">PIN:</label>
+			<input type="password" class="form-control" id="tarjetaPin" required placeholder="1234">
+		</div>
+		<!-- Login -->
+		<button type="button" class="w-100 btn btn-primary btn-login"><i class="bi bi-arrow-up-right-circle-fill"></i><br> Iniciar Sesión</button>
+		<button type="button" class="mt-2 w-100 btn btn-danger btn-home"><i class="bi bi-arrow-left"></i><br> Volver</button>
 	</div>`
 ];
 
 // Esto tambien 'se almacena informacion crucial del usuario'
 // No se debe de manejar desde el forn-end
 var LOGIN_USUARIO = null;
+var LOGIN_USUARIO_ADMIN = null;
+
+//
+var checkExpireTokenInterval = null;
 
 
 // =============================
@@ -139,7 +190,7 @@ function initializeToken() {
 	// Generar un nuevo token al iniciar sesión
 	generateToken();
 	// Verifica si el token esta activo
-	const checkExpireTokenInterval = setInterval(() => {
+	checkExpireTokenInterval = setInterval(() => {
 		console.log("checkExpireTokenInterval: " + !isTokenValid());
 		// Comprueba el token
 		if (!isTokenValid()) {
@@ -202,31 +253,32 @@ function hide_and_add_class(id) {
 
 // Muestra el formulario de login
 function show_login() {
+	// Elimina el intervalo
+	clearInterval(checkExpireTokenInterval);
 	// Oculta el primer menu
 	hide_and_add_class('#opciones-wrapper');
 	// Muestra el menu de opciones
 	show_and_remove_class('#operations-wrapper');
+	// Inserta el formulario de login
+	insertLogin();
+}
+
+// Muestra la pantalla de home
+function show_home() {
+	// Elimina el intervalo
+	clearInterval(checkExpireTokenInterval);
+	// Oculta el primer menu
+	hide_and_add_class('#operations-wrapper');
+	// Muestra el menu de opciones
+	show_and_remove_class('#opciones-wrapper');
 }
 
 // Inserta el formulario de login
 function insertLogin() {
-	const login = `<p class="title">Inicio de Sesión</p>
-	<div class="body">
-		<div class="mb-3">
-			<label for="tarjetaNumero" class="form-label">Número de tarjeta:</label>
-			<input type="text" class="form-control" id="tarjetaNumero" required placeholder="123456789">
-		</div>
-		<div class="mb-3">
-			<label for="tarjetaPin" class="form-label">PIN:</label>
-			<input type="password" class="form-control" id="tarjetaPin" required placeholder="1234">
-		</div>
-		<!-- Login -->
-		<button type="button" class="w-100 btn btn-primary btn-login"><i class="bi bi-arrow-up-right-circle-fill"></i><br> Iniciar Sesión</button>
-	</div>`;
-	
-	// Realiza los cambios dinamicamente
-	$('#operations-wrapper').html(login);
-	
+	// Elimina el intervalo
+	clearInterval(checkExpireTokenInterval);
+	// Inserta el menu de login
+	show_menu_option(MENU_OPCIONS_INSERT.INICIAR_SESION);
 	// LLama la controlador de los eventos del login
 	loginControlEvent();
 }
@@ -253,7 +305,7 @@ function loginControlEvent() {
 			success: (response) => {
 				if (response.status == 'success') {
 					LOGIN_USUARIO = response.usuario;
-					show_transacction(0);
+					show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION);
 					console.log(response.usuario);
 					// Initializa el control por token
 					initializeToken();
@@ -268,10 +320,12 @@ function loginControlEvent() {
 			}
 		});
 	});
+	const btnHome = body.find('.btn-home');
+	btnHome.on('click', () => show_home());
 }
 
 // Muestra la opcion deseada
-function show_transacction(id) {
+function show_menu_option(id) {
 	// Comprueba de que los id existan
 	if (id < 0 || id >= MENU_OPCIONES.length) return;
 	
@@ -285,58 +339,58 @@ function show_transacction(id) {
 
 // Carga los Reportes
 function loadReportes() {
-	if (LOGIN_USUARIO) {
-		// Cargamos la data
-		$.ajax({
-			url: 'index.php',
-			type: 'GET',
-			data: { action: 'get_reportes', id_usuario: LOGIN_USUARIO.id_usuario, },
-			dataType: 'json',
-			success: (response) => {
-				// Limpiar la tabla antes de agregar nuevos datos
-				$('.reportes-table tbody').empty();
-				if (response.length > 0) {
-					// Si hay reportes, agregarlos a la tabla
-					for (let i = 0; i < response.length; i++) {
-						const element = response[i];
-						// Clear
-						if (element.id_transaccion == null) {
-							// Si no hay reportes, mostrar un mensaje
-							$('.reportes-table tbody').append('<tr><td colspan="7" align="center">No hay reportes Registrados</td></tr>');
-							return;
-						}
-						
-						// const encodedJson = '\'' + encodeURIComponent(JSON.stringify(element)) + '\'';
-						$('.reportes-table tbody').append(
-							'<tr><th scope="row">' + element.id_transaccion + '</th>' +
-							'<td>' + element.nombre + '</td>' +
-							'<td>' + element.descripcion + '</td>' +
-							'<td>' + element.monto + '</td>' +
-							'<td>' + element.fecha + '</td>' +
-							'<td>' + element.cuenta.id_cuenta + '</td>' +
-							'</tr>'
-						);
+	if (LOGIN_USUARIO == null) {
+		showAlertModal("Alerta", "No ha iniciado sesión", () => location.reload());
+		return;
+	}
+	
+	// Cargamos la data
+	$.ajax({
+		url: 'index.php',
+		type: 'GET',
+		data: { action: 'get_reportes', id_usuario: LOGIN_USUARIO.id_usuario, },
+		dataType: 'json',
+		success: (response) => {
+			// Limpiar la tabla antes de agregar nuevos datos
+			$('.reportes-table tbody').empty();
+			if (response.length > 0) {
+				// Si hay reportes, agregarlos a la tabla
+				for (let i = 0; i < response.length; i++) {
+					const element = response[i];
+					// Clear
+					if (element.id_transaccion == null) {
+						// Si no hay reportes, mostrar un mensaje
+						$('.reportes-table tbody').append('<tr><td colspan="7" align="center">No hay reportes Registrados</td></tr>');
+						return;
 					}
+					
+					// const encodedJson = '\'' + encodeURIComponent(JSON.stringify(element)) + '\'';
+					$('.reportes-table tbody').append(
+						'<tr><th scope="row">' + element.id_transaccion + '</th>' +
+						'<td>' + element.nombre + '</td>' +
+						'<td>' + element.descripcion + '</td>' +
+						'<td>' + element.monto + '</td>' +
+						'<td>' + element.fecha + '</td>' +
+						'<td>' + element.cuenta.id_cuenta + '</td>' +
+						'</tr>'
+					);
 				}
-				else {
-					// Si no hay reportes, mostrar un mensaje
-					$('.reportes-table tbody').append('<tr><td colspan="7" align="center">No hay reportes Registrados</td></tr>');
-				}
-			},
-			error: (xhr, status, error) => {
-				console.error('Error en la solicitud:', error);
 			}
-		});
-	}
-	else {
-		showAlertModal("Alerta", "No ha iniciado sesión");
-	}
+			else {
+				// Si no hay reportes, mostrar un mensaje
+				$('.reportes-table tbody').append('<tr><td colspan="7" align="center">No hay reportes Registrados</td></tr>');
+			}
+		},
+		error: (xhr, status, error) => {
+			console.error('Error en la solicitud:', error);
+		}
+	});
 }
 
 // Retiro de efectivo
 function realizar_retiro() {
 	if (LOGIN_USUARIO == null) {
-		showAlertModal("Alerta", "No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión", () => location.reload());
 		return;
 	}
 	
@@ -377,7 +431,7 @@ function realizar_retiro() {
 				dataType: 'json',
 				success: (response) => {
 					if (response.status == 'success') {
-						showAlertModal("Alerta", 'La transacción se realizó con éxito.', () => show_transacction(0));
+						showAlertModal("Alerta", 'La transacción se realizó con éxito.', () => show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION));
 					}
 					else {
 						showAlertModal("Alerta", response.message);
@@ -397,8 +451,7 @@ function realizar_retiro() {
 // Realiza la accion de deposito
 function realizar_deposito() {
 	if (LOGIN_USUARIO == null) {
-		showAlertModal("Alerta", "No ha iniciado sesión");
-		refreshPage();
+		showAlertModal("Alerta", "No ha iniciado sesión", () => location.reload());
 		return;
 	}
 	
@@ -423,7 +476,7 @@ function realizar_deposito() {
 		dataType: 'json',
 		success: (response) => {
 			if (response.status == 'success') {
-				showAlertModal("Alerta", 'El depósito se realizó con éxito.', () => show_transacction(0));
+				showAlertModal("Alerta", 'El depósito se realizó con éxito.', () => show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION));
 			}
 			else {
 				showAlertModal("Alerta", response.message);
@@ -438,7 +491,7 @@ function realizar_deposito() {
 // Realiza la accion de transferir dinero a otra cuenta
 function realizar_transferencia() {
 	if (LOGIN_USUARIO == null) {
-		showAlertModal("Alerta", "No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión", () => location.reload());
 		return;
 	}
 	
@@ -514,7 +567,7 @@ function realizar_transferencia() {
 										dataType: 'json',
 										success: (response3) => {
 											if (response3.status == 'success') {
-												showAlertModal("Alerta", "La transferencia se realizó con éxito.", () => show_transacction(0));
+												showAlertModal("Alerta", "La transferencia se realizó con éxito.", () => show_menu_option(MENU_OPCIONS_INSERT.SELECTION_OPERATION));
 											}
 											else {
 												showAlertModal("Alerta", response3.message);
@@ -555,7 +608,7 @@ function realizar_transferencia() {
 // Actualizar el monto actual de la cuenta
 function consultar_saldo() {
 	if (LOGIN_USUARIO == null) {
-		showAlertModal("Alerta", "No ha iniciado sesión");
+		showAlertModal("Alerta", "No ha iniciado sesión", () => location.reload());
 		return;
 	}
 	
@@ -574,4 +627,262 @@ function consultar_saldo() {
 			console.error('Error en la solicitud:', error);
 		}
 	});
+}
+
+// Cierra la sesion
+function cerrar_sesion() {
+	// Insertamos el login
+	insertLogin();
+	// Luego de insertar el login, mostramos la pantalla de inicio para no recargar la web
+	show_home();
+}
+
+// ==========================================
+// ADMINISTRADOR
+// ==========================================
+
+// Muestra el administrador
+function show_admin() {
+	// Elimina el intervalo
+	clearInterval(checkExpireTokenInterval);
+	// Oculta el primer menu
+	hide_and_add_class('#opciones-wrapper');
+	// Muestra el menu de opciones
+	show_and_remove_class('#operations-wrapper');
+	
+	// Realiza los cambios dinamicamente
+	$('#operations-wrapper').html(`<p class="title">Administrador - BNL</p>
+	<div class="body">
+		<div class="mb-3">
+			<label for="username" class="form-label">Usuario:</label>
+			<input type="text" class="form-control" id="username" required placeholder="Usuario">
+		</div>
+		<div class="mb-3">
+			<label for="password" class="form-label">Contraseña:</label>
+			<input type="password" class="form-control" id="password" required placeholder="Contraseña">
+		</div>
+		<!-- Login -->
+		<button type="button" class="w-100 btn btn-primary btn-login"><i class="bi bi-arrow-up-right-circle-fill"></i><br> Iniciar Sesión</button>
+		<button type="button" class="mt-2 w-100 btn btn-danger btn-home"><i class="bi bi-arrow-left"></i><br> Volver</button>
+	</div>`);
+	
+	// ==================================
+	// Controlador
+	// ==================================
+	const loginWrapper = $('#operations-wrapper');
+	const body = loginWrapper.find('.body');
+	// Buttons
+	const btnLogin = body.find('.btn-login');
+	btnLogin.on('click', (e) => {
+		const username = body.find('#username').val();
+		const password = body.find('#password').val();
+		
+		// Realiza una solicitud AJAX para agregar una ciudad
+		$.ajax({
+			url: 'index.php',
+			type: 'POST',
+			data: { action: 'admin_login', username: username, password: password },
+			dataType: 'json',
+			success: (response) => {
+				if (response.status == 'success') {
+					LOGIN_USUARIO_ADMIN = response.usuario;
+					// Insert Menu de Administrador
+					show_panel_admin();
+				}
+				else {
+					// Si la respuesta contiene un mensaje de error, lo muestra en un alerta
+					showAlertModal("Alerta", response.message);
+				}
+			},
+			error: (xhr, status, error) => {
+				console.error('Error en la solicitud:', error);
+			}
+		});
+	});
+	const btnHome = body.find('.btn-home');
+	btnHome.on('click', () => show_home());
+}
+
+// Muestra el Panel de Administrador con todas las opciones.
+function show_panel_admin() {
+	$('#operations-wrapper').html(`
+		<p class="title">Panel de Administrador</p>
+		<div class="body">
+			<button type="button" class="w-100 btn btn-success" onclick="reporte_efectivo();"><i class="bi bi-file-earmark-medical-fill"></i><br> Reporte de Efectivo</button>
+			<button type="button" class="mt-2 w-100 btn btn-primary" onclick="ver_reporte_admin();"><i class="bi bi-eye"></i><br> Ver Reporte</button>
+			<button type="button" class="mt-3 w-100 btn btn-danger" onclick="show_admin();"><i class="bi bi-box-arrow-in-left"></i><br> Cerrar Sesión</button>
+		</div>
+	`);
+}
+
+// Este es la parte vizual del reporte de efectivo
+function reporte_efectivo() {
+	$('#operations-wrapper').html(`
+		<p class="title">Recolección de Datos</p>
+		<div class="body">
+			<div class="mb-3">
+				<input type="number" id="den-100" placeholder="Billetes de 100" class="form-control">
+			</div>
+			<div class="mb-3">
+				<input type="number" id="den-200" placeholder="Billetes de 200" class="form-control">
+			</div>
+			<div class="mb-3">
+				<input type="number" id="den-500" placeholder="Billetes de 500" class="form-control">
+			</div>
+			<div class="mb-3">
+				<input type="number" id="den-1000" placeholder="Billetes de 1000" class="form-control">
+			</div>
+			<div class="mb-3">
+				<input type="number" id="den-2000" placeholder="Billetes de 2000" class="form-control">
+			</div>
+		</div>
+		<div class="buttons btn-group-vertical w-100">
+			<button type="button" class="mb-2 btn btn-danger" onclick="show_panel_admin();"><i class="bi bi-x"></i><br> Cancelar</button>
+			<button type="button" class="btn btn-primary" onclick="guardar_reporte();"><i class="bi bi-arrow-right-square-fill"></i><br> Guardar Reporte</button>
+		</div>
+	`);
+}
+
+// Guarda el reporte en la DB
+function guardar_reporte() {
+	if (LOGIN_USUARIO_ADMIN == null) {
+		showAlertModal("Alerta", "No ha iniciado sesión", () => location.reload());
+		return;
+	}
+	
+	const denominaciones = {
+		100: parseInt($('#den-100').val()) || 0,
+		200: parseInt($('#den-200').val()) || 0,
+		500: parseInt($('#den-500').val()) || 0,
+		1000: parseInt($('#den-1000').val()) || 0,
+		2000: parseInt($('#den-2000').val()) || 0,
+	};
+	
+	const total = Object.entries(denominaciones).reduce((suma, [den, cant]) => suma + den * cant, 0);
+	
+	// Realiza una solicitud AJAX para agregar una ciudad
+	$.ajax({
+		url: 'index.php',
+		type: 'POST',
+		data: { action: 'guardar_reporte', denominaciones: JSON.stringify(denominaciones), total },
+		dataType: 'json',
+		success: (response) => {
+			if (response.status == 'success') {
+				showAlertModal("Alerta", response.message, () => show_panel_admin());
+			}
+			else {
+				// Si la respuesta contiene un mensaje de error
+				showAlertModal("Error", response.message);
+			}
+		},
+		error: (xhr, status, error) => {
+			console.error('Error en la solicitud:', error);
+		}
+	});
+}
+
+// Muestra el reporte del lado del administrador
+function ver_reporte_admin(insert_html=true) {
+	// Cargamos el html
+	if (insert_html) {
+		$('#operations-wrapper').html(`
+			<div class="d-flex mb-3">
+				<p class='title'>Reportes</p>
+				<button type="button" class="ms-auto btn btn-sm btn-success" onclick="descargar_reporte();"><i class="bi bi-cloud-arrow-down"></i>   Descargar</button>
+			</div>
+			<div class="body btn-group-vertical w-100" role="group" aria-label="Basic example">
+				<div class="table-responsive w-100 table-scroll">
+					<!-- table table-sm table-bordered table-hover table-striped -->
+					<table class="table table-bordered table-hover table-striped reportes-table">
+						<thead>
+							<tr>
+								<th scope="col">ID</th>
+								<th scope="col">Fecha</th>
+								<th scope="col">$100</th>
+								<th scope="col">$200</th>
+								<th scope="col">$500</th>
+								<th scope="col">$1,000</th>
+								<th scope="col">$2,000</th>
+								<th scope="col">Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td colspan="8" align="center">No hay Registros</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="btn-group-vertical w-100">
+					<button type="button" class="mt-2 btn btn-primary" onclick="ver_reporte_admin(false);"><i class="bi bi-arrow-clockwise"></i><br> Actualizar</button>
+					<button type="button" class="mt-2 btn btn-danger" onclick="show_panel_admin();"><i class="bi bi-x"></i><br> Cancelar</button>
+				</div>
+			</div>
+		`);
+	}
+	
+	// Realiza una solicitud AJAX para agregar una ciudad
+	$.ajax({
+		url: 'index.php',
+		type: 'GET',
+		data: { action: 'obtener_reportes' },
+		dataType: 'json',
+		success: (reports) => {
+			// Limpiar la tabla antes de agregar nuevos datos
+			$('.reportes-table tbody').empty();
+			// Carga la informacion
+			if (reports.length > 0) {
+				for (let i = 0; i < reports.length; i++) {
+					const report = reports[i];
+					const details = JSON.parse(report.detalles);
+					// Solo la fecha
+					const dateOnly = report.fecha.split(" ")[0];
+					// Agregamos el elemento a la lista
+					$('.reportes-table tbody').append(
+						'<tr><th scope="row">' + report.id_reporte + '</th>' +
+						'<td>' + dateOnly + '</td>' +
+						'<td>' + details['100'] + '</td>' +
+						'<td>' + details['200'] + '</td>' +
+						'<td>' + details['500'] + '</td>' +
+						'<td>' + details['1000'] + '</td>' +
+						'<td>' + details['2000'] + '</td>' +
+						'<td>' + formatWithCommas(report.total) + '</td>' +
+						'</tr>'
+					);
+				}
+			}
+			else {
+				$('.reportes-table tbody').append('<tr><td colspan="8" align="center">No hay reportes Registrados</td></tr>');
+			}
+		},
+		error: (xhr, status, error) => {
+			console.error('Error en la solicitud:', error);
+		}
+	});
+}
+
+// Esto genera el Blob de descarga
+function descargar_reporte() {
+	let csv = [];
+	
+	// Genera la lista en csv
+	// En excel 2019 se divide por ';' en los anteriores no tengo idea, pero pienso que es lo mismo.
+	$(".reportes-table tr").each(function () {
+		let row = [];
+		// Recorrer cada celda de la fila. // Obtener el texto limpio de cada celda
+		$(this).find("th, td").each(function() {
+			row.push($(this).text().trim()); 
+		});
+		csv.push(row.join(";")); // Unir los valores con punto y comas
+	})
+	
+	// Crear el archivo CSV
+	let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+	
+	// Crear un enlace temporal para la descarga
+	let tempLink = document.createElement("a");
+	tempLink.href = window.URL.createObjectURL(csvFile);
+	tempLink.download = "admin_reportes.csv"; // Nombre del archivo
+	tempLink.style.display = "none";
+	document.body.appendChild(tempLink);
+	tempLink.click(); // Disparar la descarga
+	document.body.removeChild(tempLink);
 }

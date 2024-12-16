@@ -263,6 +263,97 @@
 		exit;
 	}
 	
+	// ============================================
+	// ADMIN
+	// ============================================
+	// Verifica si el usuario existe y los parametros son validos
+	else if (isset($_POST['action']) && $_POST['action'] == 'admin_login') {
+		// Sanitizar el nombre (eliminar caracteres especiales)
+		$username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+		$password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
+		
+		// Usar una consulta preparada para evitar inyecciones SQL
+		$stmt = $conn->prepare("SELECT * FROM admins WHERE usuario = ? AND contrasena = ?");
+		$stmt->bind_param("ss", $username, $password);  // 'ss' significa que los parámetros son cadenas de texto
+		
+		// Data Null
+		$data = null;
+		
+		// Ejecutar la consulta
+		if ($stmt->execute()) {
+			$result = $stmt->get_result(); // Obtener el resultado de la consulta
+			if ($result->num_rows > 0) {
+				$row = $result->fetch_assoc();
+				//
+				$data = array(
+					"status" => "success",
+					"message" => "Usuario válido",
+					"usuario" => [
+						"id_admin" => $row["id_admin"],
+						"usuario" => $row["usuario"]
+					]
+				);
+			}
+			else {
+				$data = array(
+					"status" => "error",
+					"message" => "Usuario o contraseña incorrectos"
+				);
+			}
+		}
+		else {
+			$data = array(
+				"status" => "error_db",
+				"message" => "Error al realizar la consulta: " . $stmt->error
+			);
+		}
+		
+		// Cerrar la declaración y la conexión
+		$stmt->close();
+		
+		// Establecer el encabezado de tipo de contenido como JSON
+		header('Content-Type: application/json');
+		// Devolver los datos en formato JSON
+		echo json_encode($data);
+		// Finaliza el script para que no se ejecute el codigo HTML
+		exit;
+	}
+	// Recolección y envío del reporte de efectivo
+	else if (isset($_POST['action']) && $_POST['action'] == 'guardar_reporte') {
+		$denominaciones = isset($_POST['denominaciones']) ? json_decode($_POST['denominaciones'], true) : null; // Array asociativo: ['1000' => 5, '500' => 10, ...]
+		$total = isset($_POST['total']) ? $_POST['total'] : null;
+		if ($denominaciones !== null && $total !== null) {
+			// Convertir el array de denominaciones a un formato JSON
+			$detalles = json_encode($denominaciones);
+			// Usar una consulta preparada para evitar inyecciones SQL
+			$stmt = $conn->prepare("INSERT INTO reportes_efectivo (detalles, total) VALUES (?, ?)");
+			$stmt->bind_param("sd", $detalles, $total); // 's' para JSON y 'd' para DECIMAL
+			$data = null;
+			if ($stmt->execute()) {
+				$data = ["status" => "success", "message" => "Reporte guardado exitosamente"];
+			} else {
+				$data = ["status" => "error", "message" => "Error al guardar el reporte: " . $stmt->error];
+			}
+			$stmt->close();
+		} else {
+			$data = ["status" => "error", "message" => "Datos incompletos o inválidos"];
+		}
+		header('Content-Type: application/json');
+		echo json_encode($data);
+		exit;
+	}
+	// Ver reportes
+	else if (isset($_GET['action']) && $_GET['action'] == 'obtener_reportes') {
+		$result = $conn->query("SELECT * FROM reportes_efectivo ORDER BY fecha DESC");
+		$reportes = [];
+		while ($row = $result->fetch_assoc()) {
+			$reportes[] = $row;
+		}
+		header('Content-Type: application/json');
+		echo json_encode($reportes);
+		exit;
+	}
+	
 	// Cierra la conexion
 	$conn->close();
 ?>
@@ -293,7 +384,7 @@
 				<p class="sub-title">Por favor, inserte su tarjeta</p>
 				<div class="buttons">
 					<button type="button" class="btn btn-primary" onclick="show_login();"><i class="bi bi-credit-card-fill"></i><br> Insertar tarjeta</button>
-					<button type="button" class="btn btn-success" onclick="showAlertModal('Alerta', 'No disponible.');"><i class="bi bi-person-fill"></i><br> Administrador</button>
+					<button type="button" class="btn btn-success" onclick="show_admin();"><i class="bi bi-person-fill"></i><br> Administrador</button>
 				</div>
 			</div>
 			
@@ -311,6 +402,7 @@
 					</div>
 					<!-- Login -->
 					<button type="button" class="w-100 btn btn-primary btn-login"><i class="bi bi-arrow-up-right-circle-fill"></i><br> Iniciar Sesión</button>
+					<button type="button" class="mt-2 w-100 btn btn-danger btn-home"><i class="bi bi-arrow-left"></i><br> Volver</button>
 				</div>
 			</div>
 			

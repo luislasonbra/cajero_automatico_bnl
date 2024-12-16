@@ -21,10 +21,20 @@
     2.4 Transferencia                           # Esta pantalla funciona por completo
     2.5 Consulta de saldo                       # Esta pantalla funciona por completo
     2.6 Ver reportes                            # Esta pantalla funciona por completo
-3. Administrador (Actualmente no disponible)    # Esta pantalla esta en proceso
+3. Administrador (Actualmente no disponible)    # Esta pantalla funciona por completo
+    3.1 Registro de Efectivo                    # Esta pantalla funciona por completo
+    3.2 Reportes                                # Esta pantalla funciona por completo
 ```
 
-#### Mejoras [17/12/2024]
+#### Mejoras [16/12/2024]
+```shell
+1. El Administrador ya esta completo
+2. Mejoras en el flujo.
+3. Boton para Cerrar Sesión
+4. Boton para volver atras en el login (Admin y Tarjeta)
+```
+
+#### Mejoras [14/12/2024]
 ```shell
 1. Se agrego control de tokens (para la seguridad)
 2. Ventanas modales para los errores y mensajes de alerta.
